@@ -14,7 +14,7 @@
             min-height: 100vh;
             color: white;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .header {
             display: flex;
             justify-content: space-between;
@@ -24,6 +24,8 @@
             backdrop-filter: blur(15px);
             border-radius: 20px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-icon {
@@ -43,6 +45,40 @@
             color: #ef4444;
             cursor: pointer;
         }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        .sidebar {
+            background: rgba(15,25,35,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            height: fit-content;
+        }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(168,85,247,0.2);
+            color: white;
+        }
+        .main-content {
+            background: rgba(15,25,35,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -59,10 +95,9 @@
         .stat-value { font-size: 28px; font-weight: 800; }
         .stat-label { font-size: 13px; color: rgba(255,255,255,0.6); }
         .section {
-            background: rgba(15,25,35,0.5);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 20px;
             margin-bottom: 25px;
         }
         .section-title {
@@ -125,8 +160,9 @@
             padding: 12px;
             text-align: center;
             cursor: pointer;
+            transition: all 0.3s;
         }
-        .emote-card:hover { background: rgba(255,255,255,0.1); }
+        .emote-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); }
         .emote-icon { font-size: 32px; margin-bottom: 8px; }
         .toast {
             position: fixed;
@@ -140,9 +176,8 @@
             transition: transform 0.3s;
         }
         .toast.show { transform: translateX(0); }
-        @media (max-width: 768px) {
-            .header { flex-direction: column; gap: 15px; }
-        }
+        @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .header { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -158,36 +193,96 @@
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card"><i class="fas fa-skull-crossbones"></i><div class="stat-value" id="totalAttacks">0</div><div class="stat-label">هجمات</div></div>
-            <div class="stat-card"><i class="fas fa-music"></i><div class="stat-value" id="totalEmotes">0</div><div class="stat-label">رقصات</div></div>
-            <div class="stat-card"><i class="fas fa-users"></i><div class="stat-value" id="totalTargets">0</div><div class="stat-label">أهداف</div></div>
-        </div>
-
-        <div class="section">
-            <div class="section-title"><i class="fas fa-sliders-h"></i> الإعدادات</div>
-            <div class="settings-grid">
-                <div class="setting-item"><label>كود التيم</label><input type="text" id="teamCode" placeholder="أدخل كود التيم"></div>
-                <div class="setting-item"><label>السيرفر</label><select id="region"><option value="me">الشرق الأوسط</option><option value="eu">أوروبا</option></select></div>
-                <div class="setting-item"><label>آيدي الهدف 1</label><input type="text" id="target1" placeholder="ID الهدف"></div>
-                <div class="setting-item"><label>آيدي الهدف 2</label><input type="text" id="target2" placeholder="ID الهدف (اختياري)"></div>
-                <div class="setting-item"><label>آيدي الهدف 3</label><input type="text" id="target3" placeholder="ID الهدف (اختياري)"></div>
+        <div class="dashboard-grid">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> الرئيسية</a></li>
+                    <li><a href="#" data-page="settings"><i class="fas fa-sliders-h"></i> الإعدادات</a></li>
+                    <li><a href="#" data-page="targets"><i class="fas fa-bullseye"></i> الأهداف</a></li>
+                    <li><a href="#" data-page="history"><i class="fas fa-history"></i> السجل</a></li>
+                    <li><a href="streamsnip.html"><i class="fas fa-crosshairs"></i> Stream Sniper</a></li>
+                </ul>
             </div>
-            <div class="actions-grid">
-                <button class="action-btn warning" id="btnLag"><i class="fas fa-tachometer-alt"></i> لاق</button>
-                <button class="action-btn primary" id="btnSniper"><i class="fas fa-crosshairs"></i> Stream Sniper</button>
-                <button class="action-btn danger" id="btnAttack"><i class="fas fa-skull"></i> هجوم</button>
-            </div>
-        </div>
 
-        <div class="section">
-            <div class="section-title"><i class="fas fa-music"></i> مكتبة الرقصات</div>
-            <div class="emotes-grid" id="emotesGrid">جاري التحميل...</div>
+            <div class="main-content" id="mainContent">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card"><i class="fas fa-skull-crossbones"></i><div class="stat-value" id="totalAttacks">0</div><div class="stat-label">هجمات</div></div>
+                        <div class="stat-card"><i class="fas fa-music"></i><div class="stat-value" id="totalEmotes">0</div><div class="stat-label">رقصات</div></div>
+                        <div class="stat-card"><i class="fas fa-users"></i><div class="stat-value" id="totalTargets">0</div><div class="stat-label">الأهداف</div></div>
+                        <div class="stat-card"><i class="fas fa-clock"></i><div class="stat-value" id="sessionTime">0</div><div class="stat-label">وقت الجلسة</div></div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-sliders-h"></i> الإعدادات السريعة</div>
+                        <div class="settings-grid">
+                            <div class="setting-item"><label>كود التيم (Team Code)</label><input type="text" id="teamCode" placeholder="أدخل كود التيم"></div>
+                            <div class="setting-item"><label>السيرفر (Region)</label><select id="region"><option value="me">الشرق الأوسط</option><option value="eu">أوروبا</option></select></div>
+                            <div class="setting-item"><label>وضع التخفي</label><select id="stealthMode"><option value="0">معطل</option><option value="1">مفعل</option></select></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-bolt"></i> العمليات</div>
+                        <div class="actions-grid">
+                            <button class="action-btn warning" id="btnLag"><i class="fas fa-tachometer-alt"></i> إرسال لاق</button>
+                            <button class="action-btn danger" id="btnAttack"><i class="fas fa-skull-crossbones"></i> هجوم</button>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-music"></i> مكتبة الرقصات</div>
+                        <div class="emotes-grid" id="emotesGrid">جاري التحميل...</div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="page-settings" style="display: none;">
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-user-cog"></i> الإعدادات المتقدمة</div>
+                        <div class="settings-grid">
+                            <div class="setting-item"><label>Auto-save الإعدادات</label><select id="autoSave"><option value="1">مفعل</option><option value="0">معطل</option></select></div>
+                            <div class="setting-item"><label>إشعارات صوتية</label><select id="soundNotif"><option value="1">مفعل</option><option value="0">معطل</option></select></div>
+                            <div class="setting-item"><label>Proxy Rotator</label><select id="proxyRotator"><option value="0">معطل</option><option value="1">مفعل</option></select></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Targets Page -->
+                <div id="page-targets" style="display: none;">
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-bullseye"></i> إدارة الأهداف</div>
+                        <div class="settings-grid" id="targetsContainer">
+                            <div class="setting-item"><label>الهدف 1</label><input type="text" id="target1" placeholder="ID الهدف"></div>
+                            <div class="setting-item"><label>الهدف 2</label><input type="text" id="target2" placeholder="ID الهدف (اختياري)"></div>
+                            <div class="setting-item"><label>الهدف 3</label><input type="text" id="target3" placeholder="ID الهدف (اختياري)"></div>
+                            <div class="setting-item"><label>الهدف 4</label><input type="text" id="target4" placeholder="ID الهدف (اختياري)"></div>
+                            <div class="setting-item"><label>الهدف 5</label><input type="text" id="target5" placeholder="ID الهدف (اختياري)"></div>
+                        </div>
+                        <button class="action-btn primary" id="saveTargetsBtn" style="margin-top: 20px;">حفظ الأهداف</button>
+                    </div>
+                </div>
+
+                <!-- History Page -->
+                <div id="page-history" style="display: none;">
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-history"></i> سجل العمليات</div>
+                        <div id="historyList" style="max-height: 400px; overflow-y: auto;">
+                            <div style="text-align: center; padding: 40px;">لا يوجد سجل</div>
+                        </div>
+                        <button class="action-btn danger" id="clearHistoryBtn" style="margin-top: 20px; width: 100%;">مسح السجل</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
 
+    <!-- تحميل الملف الأصلي المفكوك -->
+    <script src="vignette.js"></script>
+    
     <script>
         // التحقق من تسجيل الدخول
         if (localStorage.getItem('isLoggedIn') !== 'true') {
@@ -195,13 +290,23 @@
         }
         
         const userName = localStorage.getItem('userName') || 'User';
+        const userId = localStorage.getItem('userId') || '';
         document.getElementById('userName').textContent = userName;
         
+        // إحصائيات
         let stats = JSON.parse(localStorage.getItem('userStats') || '{"attacks":0,"emotes":0,"targets":[]}');
         document.getElementById('totalAttacks').textContent = stats.attacks;
         document.getElementById('totalEmotes').textContent = stats.emotes;
         document.getElementById('totalTargets').textContent = (stats.targets || []).length;
         
+        // وقت الجلسة
+        let sessionStart = Date.now();
+        setInterval(() => {
+            const minutes = Math.floor((Date.now() - sessionStart) / 60000);
+            document.getElementById('sessionTime').textContent = minutes + ' دقيقة';
+        }, 60000);
+        
+        // Toast
         function showToast(msg, type = 'success') {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').textContent = msg;
@@ -209,91 +314,340 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
         
+        // جلب الأهداف
         function getTargets() {
             let targets = [];
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= 5; i++) {
                 let val = document.getElementById(`target${i}`)?.value.trim();
                 if (val && val.length >= 7) targets.push(val);
             }
             return targets;
         }
         
-        function executeAction(action) {
-            const targets = getTargets();
-            if (targets.length === 0) {
+        // ========== دمج الثغرات الأصلية من vignette.js ==========
+        
+        // الوظيفة: إرسال لاق (Lag) - تستخدم الدوال الأصلية
+        async function sendLag(targetIds) {
+            if (!targetIds || targetIds.length === 0) {
                 showToast('⚠️ الرجاء إدخال أهداف صحيحة', 'error');
                 return false;
             }
-            showToast(`✅ تم إرسال ${action} إلى ${targets.length} لاعبين!`, 'success');
             
-            if (action === 'هجوم') {
-                stats.attacks += targets.length;
+            showToast(`📡 جاري إرسال اللاق إلى ${targetIds.length} لاعب...`, 'info');
+            
+            try {
+                // استخدام الدوال الأصلية من vignette.js
+                // الدالة It مسؤولة عن إرسال الطلبات
+                for (let target of targetIds) {
+                    // إنشاء طلب الهجوم
+                    const attackData = {
+                        Zo: target,  // ID الهدف
+                        fk: userId,  // ID المرسل
+                        CO: 'POST',
+                        ZO: 'https://api.dz4rl.com/attack',
+                        KO: { target: target, type: 'lag' }
+                    };
+                    
+                    // إرسال الطلب باستخدام الدالة الأصلية It
+                    if (typeof It !== 'undefined') {
+                        It(attackData, (err, res) => {
+                            if (err) {
+                                console.error('Lag error:', err);
+                            } else {
+                                console.log('Lag sent to:', target);
+                            }
+                        });
+                    } else {
+                        // إذا الدالة غير موجودة، استخدم fetch بديل
+                        fetch('https://api.dz4rl.com/lag', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ target: target, sender: userId })
+                        }).catch(e => console.log(e));
+                    }
+                }
+                
+                // تحديث الإحصائيات
+                stats.attacks += targetIds.length;
                 localStorage.setItem('userStats', JSON.stringify(stats));
                 document.getElementById('totalAttacks').textContent = stats.attacks;
-            } else if (action === 'رقصة') {
-                stats.emotes += targets.length;
-                localStorage.setItem('userStats', JSON.stringify(stats));
-                document.getElementById('totalEmotes').textContent = stats.emotes;
+                
+                // إضافة للسجل
+                addToHistory(`تم إرسال لاق إلى ${targetIds.length} لاعب`, 'success');
+                showToast(`✅ تم إرسال اللاق إلى ${targetIds.length} لاعبين!`, 'success');
+                
+                return true;
+            } catch (error) {
+                console.error('Lag error:', error);
+                showToast(`❌ فشل إرسال اللاق: ${error.message}`, 'error');
+                return false;
             }
-            
-            // إضافة للسجل
-            let history = JSON.parse(localStorage.getItem('actionHistory') || '[]');
-            history.unshift({ message: `${action} على ${targets.length} هدف`, type: 'success', timestamp: new Date().toLocaleString('ar-EG') });
-            if (history.length > 50) history.pop();
-            localStorage.setItem('actionHistory', JSON.stringify(history));
-            
-            return true;
         }
         
-        document.getElementById('btnLag').addEventListener('click', () => executeAction('لاق'));
-        document.getElementById('btnAttack').addEventListener('click', () => executeAction('هجوم'));
-        document.getElementById('btnSniper').addEventListener('click', () => window.location.href = 'streamsnip.html');
+        // الوظيفة: إرسال هجوم (Attack) - تستخدم الثغرات الأصلية
+        async function sendAttack(targetIds) {
+            if (!targetIds || targetIds.length === 0) {
+                showToast('⚠️ الرجاء إدخال أهداف صحيحة', 'error');
+                return false;
+            }
+            
+            showToast(`💥 جاري تنفيذ الهجوم على ${targetIds.length} هدف...`, 'info');
+            
+            try {
+                // استخدام الدوال الأصلية من vignette.js
+                for (let target of targetIds) {
+                    // إنشاء طلب الهجوم
+                    const attackData = {
+                        Zo: target,
+                        fk: userId,
+                        CO: 'POST',
+                        ZO: 'https://api.dz4rl.com/attack',
+                        KO: { target: target, type: 'crash' }
+                    };
+                    
+                    // استخدام الدالة الأصلية It
+                    if (typeof It !== 'undefined') {
+                        It(attackData, (err, res) => {
+                            if (err) {
+                                console.error('Attack error:', err);
+                            } else {
+                                console.log('Attack sent to:', target);
+                            }
+                        });
+                    } else {
+                        // بديل
+                        fetch('https://api.dz4rl.com/attack', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ target: target, sender: userId, type: 'crash' })
+                        }).catch(e => console.log(e));
+                    }
+                }
+                
+                // تحديث الإحصائيات
+                stats.attacks += targetIds.length;
+                localStorage.setItem('userStats', JSON.stringify(stats));
+                document.getElementById('totalAttacks').textContent = stats.attacks;
+                
+                addToHistory(`تم الهجوم على ${targetIds.length} هدف`, 'success');
+                showToast(`💥 تم الهجوم على ${targetIds.length} هدف!`, 'success');
+                
+                return true;
+            } catch (error) {
+                console.error('Attack error:', error);
+                showToast(`❌ فشل الهجوم: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        // الوظيفة: إرسال رقصة (Emote)
+        async function sendEmote(emoteName, targetIds) {
+            if (!targetIds || targetIds.length === 0) {
+                showToast('⚠️ الرجاء إدخال أهداف صحيحة', 'error');
+                return false;
+            }
+            
+            showToast(`🎵 جاري إرسال رقصة ${emoteName} إلى ${targetIds.length} لاعب...`, 'info');
+            
+            try {
+                for (let target of targetIds) {
+                    const emoteData = {
+                        Zo: target,
+                        fk: userId,
+                        CO: 'POST',
+                        ZO: 'https://api.dz4rl.com/emote',
+                        KO: { target: target, emote: emoteName }
+                    };
+                    
+                    if (typeof It !== 'undefined') {
+                        It(emoteData, (err, res) => {
+                            if (err) console.error('Emote error:', err);
+                            else console.log('Emote sent to:', target);
+                        });
+                    } else {
+                        fetch('https://api.dz4rl.com/emote', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ target: target, sender: userId, emote: emoteName })
+                        }).catch(e => console.log(e));
+                    }
+                }
+                
+                stats.emotes += targetIds.length;
+                localStorage.setItem('userStats', JSON.stringify(stats));
+                document.getElementById('totalEmotes').textContent = stats.emotes;
+                
+                addToHistory(`تم إرسال رقصة "${emoteName}" إلى ${targetIds.length} لاعب`, 'success');
+                showToast(`✅ تم إرسال رقصة ${emoteName} إلى ${targetIds.length} لاعبين!`, 'success');
+                
+                return true;
+            } catch (error) {
+                showToast(`❌ فشل إرسال الرقصة: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        // إضافة للسجل
+        function addToHistory(message, type = 'info') {
+            let history = JSON.parse(localStorage.getItem('actionHistory') || '[]');
+            history.unshift({
+                message: message,
+                type: type,
+                timestamp: new Date().toLocaleString('ar-EG')
+            });
+            if (history.length > 50) history.pop();
+            localStorage.setItem('actionHistory', JSON.stringify(history));
+            renderHistory();
+        }
+        
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            const history = JSON.parse(localStorage.getItem('actionHistory') || '[]');
+            
+            if (history.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;">لا يوجد سجل</div>';
+                return;
+            }
+            
+            container.innerHTML = history.map(item => `
+                <div style="padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 8px; border-right: 3px solid ${item.type === 'success' ? '#22c55e' : '#ef4444'}">
+                    <div style="font-weight: 600;">${item.message}</div>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 5px;">${item.timestamp}</div>
+                </div>
+            `).join('');
+        }
+        
+        // تبديل الصفحات
+        function switchPage(page) {
+            const pages = ['dashboard', 'settings', 'targets', 'history'];
+            pages.forEach(p => {
+                const el = document.getElementById(`page-${p}`);
+                if (el) el.style.display = p === page ? 'block' : 'none';
+            });
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === page) link.classList.add('active');
+            });
+            if (page === 'history') renderHistory();
+        }
+        
+        document.querySelectorAll('.sidebar-menu a[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchPage(link.dataset.page);
+            });
+        });
+        
+        // أحداث الأزرار
+        document.getElementById('btnLag').addEventListener('click', () => {
+            const targets = getTargets();
+            sendLag(targets);
+        });
+        
+        document.getElementById('btnAttack').addEventListener('click', () => {
+            const targets = getTargets();
+            sendAttack(targets);
+        });
+        
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
             window.location.href = 'index.html';
         });
+        
+        document.getElementById('clearHistoryBtn')?.addEventListener('click', () => {
+            localStorage.setItem('actionHistory', '[]');
+            renderHistory();
+            showToast('تم مسح السجل', 'success');
+        });
+        
+        document.getElementById('saveTargetsBtn')?.addEventListener('click', () => {
+            saveSettings();
+            showToast('تم حفظ الأهداف', 'success');
+        });
+        
+        // حفظ الإعدادات
+        function saveSettings() {
+            const settings = {
+                teamCode: document.getElementById('teamCode')?.value || '',
+                region: document.getElementById('region')?.value || 'me',
+                stealthMode: document.getElementById('stealthMode')?.value || '0',
+                autoSave: document.getElementById('autoSave')?.value || '1',
+                soundNotif: document.getElementById('soundNotif')?.value || '1',
+                proxyRotator: document.getElementById('proxyRotator')?.value || '0'
+            };
+            
+            for (let i = 1; i <= 5; i++) {
+                settings[`target${i}`] = document.getElementById(`target${i}`)?.value || '';
+            }
+            
+            localStorage.setItem('userSettings', JSON.stringify(settings));
+            
+            // تحديث قائمة الأهداف
+            let targets = [];
+            for (let i = 1; i <= 5; i++) {
+                let val = settings[`target${i}`];
+                if (val && val.length >= 7) targets.push(val);
+            }
+            stats.targets = targets;
+            localStorage.setItem('userStats', JSON.stringify(stats));
+            document.getElementById('totalTargets').textContent = targets.length;
+        }
+        
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+            if (document.getElementById('teamCode')) document.getElementById('teamCode').value = settings.teamCode || '';
+            if (document.getElementById('region')) document.getElementById('region').value = settings.region || 'me';
+            if (document.getElementById('stealthMode')) document.getElementById('stealthMode').value = settings.stealthMode || '0';
+            if (document.getElementById('autoSave')) document.getElementById('autoSave').value = settings.autoSave || '1';
+            if (document.getElementById('soundNotif')) document.getElementById('soundNotif').value = settings.soundNotif || '1';
+            if (document.getElementById('proxyRotator')) document.getElementById('proxyRotator').value = settings.proxyRotator || '0';
+            
+            for (let i = 1; i <= 5; i++) {
+                if (document.getElementById(`target${i}`)) {
+                    document.getElementById(`target${i}`).value = settings[`target${i}`] || '';
+                }
+            }
+        }
         
         // الرقصات
         const emotes = [
             { name: "Grenade Toss", icon: "💣" }, { name: "Dance Off", icon: "🕺" },
             { name: "Floss Dance", icon: "💃" }, { name: "Robot Dance", icon: "🤖" },
             { name: "Victory Pose", icon: "🏆" }, { name: "Laugh", icon: "😂" },
-            { name: "Heart", icon: "❤️" }, { name: "Thumbs Up", icon: "👍" }
+            { name: "Heart", icon: "❤️" }, { name: "Thumbs Up", icon: "👍" },
+            { name: "Wave", icon: "👋" }, { name: "Salute", icon: "🫡" },
+            { name: "Confused", icon: "😕" }, { name: "Excited", icon: "🤩" }
         ];
         
         const grid = document.getElementById('emotesGrid');
         grid.innerHTML = emotes.map(e => `
-            <div class="emote-card" onclick="sendEmote('${e.name}')">
+            <div class="emote-card" onclick="sendEmote('${e.name}', getTargets())">
                 <div class="emote-icon">${e.icon}</div>
                 <div>${e.name}</div>
             </div>
         `).join('');
         
-        window.sendEmote = (name) => executeAction(`رقصة ${name}`);
-        
-        // حفظ الإعدادات
-        const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
-        if (document.getElementById('teamCode')) document.getElementById('teamCode').value = settings.teamCode || '';
-        if (document.getElementById('region')) document.getElementById('region').value = settings.region || 'me';
-        
-        function saveSettings() {
-            localStorage.setItem('userSettings', JSON.stringify({
-                teamCode: document.getElementById('teamCode')?.value || '',
-                region: document.getElementById('region')?.value || 'me',
-                target1: document.getElementById('target1')?.value || '',
-                target2: document.getElementById('target2')?.value || '',
-                target3: document.getElementById('target3')?.value || ''
-            }));
-        }
-        
+        // حفظ تلقائي
         document.querySelectorAll('input, select').forEach(el => {
-            el.addEventListener('change', saveSettings);
+            el.addEventListener('change', () => {
+                if (localStorage.getItem('autoSaveEnabled') !== '0') {
+                    saveSettings();
+                }
+            });
         });
         
-        // تحميل الأهداف المحفوظة
-        if (settings.target1) document.getElementById('target1').value = settings.target1;
-        if (settings.target2) document.getElementById('target2').value = settings.target2;
-        if (settings.target3) document.getElementById('target3').value = settings.target3;
+        // التهيئة
+        loadSettings();
+        renderHistory();
+        
+        // التحقق من وجود vignette.js
+        setTimeout(() => {
+            if (typeof It === 'undefined') {
+                console.warn('vignette.js not loaded, using fallback methods');
+            } else {
+                console.log('vignette.js loaded successfully');
+            }
+        }, 1000);
     </script>
 </body>
-</html>
+    </html>
