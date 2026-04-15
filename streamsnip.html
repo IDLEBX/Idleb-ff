@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDLEB FF - Stream Sniper</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -10,25 +10,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            background: linear-gradient(135deg, #0f0c29, #1a1a3e, #24243e);
             min-height: 100vh;
             color: white;
         }
-        .canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .header {
             display: flex;
             justify-content: space-between;
@@ -39,14 +25,8 @@
             border-radius: 20px;
             margin-bottom: 25px;
         }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
         .logo-icon {
-            width: 45px;
-            height: 45px;
+            width: 45px; height: 45px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 12px;
             display: flex;
@@ -60,25 +40,7 @@
             border-radius: 40px;
             color: white;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .stat-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 18px;
-            text-align: center;
-        }
-        .stat-card i { font-size: 28px; color: #a855f7; margin-bottom: 10px; }
-        .stat-value { font-size: 28px; font-weight: 800; }
-        .stat-label { font-size: 13px; color: rgba(255,255,255,0.6); }
         .add-player {
             background: rgba(255,255,255,0.05);
             border-radius: 16px;
@@ -90,12 +52,11 @@
         }
         .add-player input {
             flex: 1;
-            padding: 14px 18px;
+            padding: 14px;
             background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 12px;
             color: white;
-            font-family: 'Cairo', sans-serif;
         }
         .add-player button {
             padding: 14px 25px;
@@ -105,58 +66,35 @@
             color: white;
             cursor: pointer;
         }
-        .search-box {
-            margin-bottom: 20px;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 40px;
-            color: white;
-        }
         .players-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 15px;
-            max-height: 500px;
-            overflow-y: auto;
         }
         .player-card {
             background: rgba(255,255,255,0.05);
             border-radius: 16px;
             padding: 15px;
-            transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.05);
         }
-        .player-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); }
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .player-name { font-weight: 700; font-size: 16px; }
+        .player-name { font-weight: 700; margin-bottom: 8px; }
         .player-status {
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 11px;
+            display: inline-block;
         }
         .player-status.online { background: rgba(34,197,94,0.2); color: #22c55e; }
-        .player-status.ingame { background: rgba(245,158,11,0.2); color: #f59e0b; }
         .player-status.offline { background: rgba(107,114,128,0.2); color: #9ca3af; }
-        .player-details { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
-        .player-actions { display: flex; gap: 10px; }
+        .player-details { font-size: 12px; color: rgba(255,255,255,0.6); margin: 10px 0; }
+        .player-actions { display: flex; gap: 10px; margin-top: 10px; }
         .player-actions button {
             flex: 1;
             padding: 8px;
             border-radius: 10px;
             cursor: pointer;
-            font-family: 'Cairo', sans-serif;
         }
-        .btn-snipe { background: rgba(168,85,247,0.2); border: 1px solid rgba(168,85,247,0.3); color: #a855f7; }
-        .btn-remove { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
+        .btn-snipe { background: rgba(168,85,247,0.2); border: none; color: #a855f7; }
+        .btn-remove { background: rgba(239,68,68,0.2); border: none; color: #ef4444; }
         .toast {
             position: fixed;
             bottom: 20px;
@@ -169,114 +107,52 @@
             transition: transform 0.3s;
         }
         .toast.show { transform: translateX(0); }
-        @media (max-width: 600px) {
-            .add-player { flex-direction: column; }
-        }
+        @media (max-width: 600px) { .add-player { flex-direction: column; } }
     </style>
 </head>
 <body>
-    <canvas class="canvas-bg" id="bgCanvas"></canvas>
     <div class="container">
         <div class="header">
             <div class="logo-area">
                 <div class="logo-icon"><i class="fas fa-crown"></i></div>
-                <h2>IDLEB FF</h2>
+                <h2>IDLEB FF - Stream Sniper</h2>
             </div>
-            <button class="btn-back" onclick="window.location.href='/dashboard.html'">
-                <i class="fas fa-arrow-right"></i> الرجوع
-            </button>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card"><i class="fas fa-users"></i><div class="stat-value" id="totalPlayers">0</div><div class="stat-label">مجموع اللاعبين</div></div>
-            <div class="stat-card"><i class="fas fa-globe"></i><div class="stat-value" id="onlinePlayers">0</div><div class="stat-label">متصلين</div></div>
-            <div class="stat-card"><i class="fas fa-gamepad"></i><div class="stat-value" id="ingamePlayers">0</div><div class="stat-label">في اللعبة</div></div>
+            <button class="btn-back" onclick="window.location.href='dashboard.html'"><i class="fas fa-arrow-right"></i> رجوع</button>
         </div>
 
         <div class="add-player">
-            <input type="text" id="newPlayerId" placeholder="أدخل ID اللاعب (8-12 رقم)" maxlength="12">
-            <button id="addPlayerBtn"><i class="fas fa-plus"></i> إضافة</button>
+            <input type="text" id="playerId" placeholder="أدخل ID اللاعب (8-12 رقم)" maxlength="12">
+            <button id="addBtn"><i class="fas fa-plus"></i> إضافة لاعب</button>
         </div>
 
-        <div class="search-box">
-            <input type="text" id="searchPlayer" placeholder="البحث بالاسم أو الآيدي...">
-        </div>
-
-        <div class="players-grid" id="playersGrid">
-            <div style="text-align: center; padding: 40px;">لا يوجد لاعبين</div>
-        </div>
+        <div class="players-grid" id="playersGrid">لا يوجد لاعبين</div>
     </div>
 
-    <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
+    <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
     <script>
-        // 3D Background
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
-        resize(); window.addEventListener('resize', resize);
-        let particles = [];
-        for (let i = 0; i < 80; i++) particles.push({ x: Math.random(), y: Math.random(), z: Math.random(), size: Math.random() * 3 + 1, speedX: (Math.random() - 0.5) * 0.002, speedY: (Math.random() - 0.5) * 0.002, speedZ: (Math.random() - 0.5) * 0.003, color: `hsl(${260 + Math.random() * 60}, 70%, 60%)` });
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            grad.addColorStop(0, '#0f0c29'); grad.addColorStop(0.5, '#1a1a3e'); grad.addColorStop(1, '#24243e');
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for (let p of particles) {
-                p.x += p.speedX; p.y += p.speedY; p.z += p.speedZ;
-                if (p.x > 1) p.x = 0; if (p.x < 0) p.x = 1;
-                if (p.y > 1) p.y = 0; if (p.y < 0) p.y = 1;
-                if (p.z > 1) p.z = 0; if (p.z < 0) p.z = 1;
-                const scale = 1 / (1 + p.z * 2);
-                const x = (p.x - 0.5) * canvas.width * scale + canvas.width / 2;
-                const y = (p.y - 0.5) * canvas.height * scale + canvas.height / 2;
-                const size = p.size * scale * 2;
-                ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color; ctx.shadowBlur = size * 3; ctx.shadowColor = p.color; ctx.fill();
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Toast
-        function showToast(msg, type = 'success') {
+        if (localStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'index.html';
+        
+        let players = JSON.parse(localStorage.getItem('streamPlayers') || '[]');
+        
+        function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').textContent = msg;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
-
-        // بيانات اللاعبين
-        let players = JSON.parse(localStorage.getItem('streamPlayers') || '[]');
         
-        function updateStats() {
-            document.getElementById('totalPlayers').textContent = players.length;
-            document.getElementById('onlinePlayers').textContent = players.filter(p => p.status === 'online').length;
-            document.getElementById('ingamePlayers').textContent = players.filter(p => p.status === 'ingame').length;
-        }
-        
-        function renderPlayers(search = '') {
+        function renderPlayers() {
             const container = document.getElementById('playersGrid');
-            const filtered = players.filter(p => 
-                p.id.includes(search) || (p.name && p.name.toLowerCase().includes(search.toLowerCase()))
-            );
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;">لا يوجد لاعبين</div>';
+            if (players.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">لا يوجد لاعبين</div>';
                 return;
             }
-            
-            container.innerHTML = filtered.map(p => `
-                <div class="player-card" data-id="${p.id}">
-                    <div class="player-header">
-                        <span class="player-name">${p.name || 'لاعب ' + p.id}</span>
-                        <span class="player-status ${p.status || 'offline'}">${getStatusText(p.status)}</span>
-                    </div>
-                    <div class="player-details">
-                        <div><i class="fas fa-id-card"></i> ID: ${p.id}</div>
-                        <div><i class="fas fa-clock"></i> أضيف: ${new Date(p.addedAt).toLocaleTimeString('ar-EG')}</div>
-                        <div><i class="fas fa-hourglass-half"></i> يتبقى: ${Math.max(0, Math.ceil((p.expiresAt - Date.now()) / 60000))} دقيقة</div>
-                    </div>
+            container.innerHTML = players.map(p => `
+                <div class="player-card">
+                    <div class="player-name">${p.name || 'لاعب ' + p.id}</div>
+                    <div><span class="player-status ${p.status}">${p.status === 'online' ? '🟢 متصل' : '⚫ غير متصل'}</span></div>
+                    <div class="player-details"><i class="fas fa-id-card"></i> ID: ${p.id}<br><i class="fas fa-clock"></i> يتبقى: ${Math.max(0, Math.ceil((p.expiresAt - Date.now()) / 60000))} دقيقة</div>
                     <div class="player-actions">
                         <button class="btn-snipe" onclick="snipePlayer('${p.id}')"><i class="fas fa-crosshairs"></i> Snipe</button>
                         <button class="btn-remove" onclick="removePlayer('${p.id}')"><i class="fas fa-trash"></i> حذف</button>
@@ -285,116 +161,57 @@
             `).join('');
         }
         
-        function getStatusText(status) {
-            switch(status) {
-                case 'online': return '🟢 متصل';
-                case 'ingame': return '🟡 في اللعبة';
-                default: return '⚫ غير متصل';
-            }
-        }
-        
         function addPlayer(id) {
             if (!id.match(/^\d{8,12}$/)) {
-                showToast('❌ ID يجب أن يكون 8-12 رقم فقط', 'error');
+                showToast('❌ ID يجب أن يكون 8-12 رقم فقط');
                 return false;
             }
             if (players.find(p => p.id === id)) {
-                showToast('⚠️ هذا اللاعب موجود مسبقاً', 'warning');
+                showToast('⚠️ هذا اللاعب موجود مسبقاً');
                 return false;
             }
-            
             players.push({
-                id: id,
-                name: null,
-                status: 'offline',
-                addedAt: Date.now(),
-                expiresAt: Date.now() + 5 * 60 * 1000
+                id: id, name: null, status: 'offline',
+                addedAt: Date.now(), expiresAt: Date.now() + 5 * 60 * 1000
             });
-            
             localStorage.setItem('streamPlayers', JSON.stringify(players));
-            updateStats();
             renderPlayers();
-            showToast(`✅ تم إضافة اللاعب ${id}`, 'success');
-            
-            // تحديث الحالة تلقائياً كل 30 ثانية
-            setTimeout(() => updatePlayerStatus(id), 2000);
+            showToast(`✅ تم إضافة اللاعب ${id}`);
             return true;
         }
         
         function removePlayer(id) {
             players = players.filter(p => p.id !== id);
             localStorage.setItem('streamPlayers', JSON.stringify(players));
-            updateStats();
             renderPlayers();
-            showToast(`🗑️ تم حذف اللاعب`, 'info');
+            showToast(`🗑️ تم حذف اللاعب`);
         }
         
         function snipePlayer(id) {
-            showToast(`🎯 جاري استهداف اللاعب ${id}...`, 'info');
+            showToast(`🎯 جاري استهداف ${id}...`);
             setTimeout(() => {
-                showToast(`✅ تم إرسال الطلب إلى ${id}`, 'success');
-                addToHistory(`تم استهداف ${id} عبر Stream Sniper`);
+                showToast(`✅ تم إرسال الطلب إلى ${id}`);
+                let history = JSON.parse(localStorage.getItem('actionHistory') || '[]');
+                history.unshift({ message: `تم استهداف ${id} عبر Stream Sniper`, type: 'success', timestamp: new Date().toLocaleString('ar-EG') });
+                if (history.length > 50) history.pop();
+                localStorage.setItem('actionHistory', JSON.stringify(history));
             }, 1500);
         }
         
-        function updatePlayerStatus(id) {
-            // محاكاة تحديث الحالة
-            const player = players.find(p => p.id === id);
-            if (player && player.expiresAt > Date.now()) {
-                const statuses = ['online', 'ingame', 'offline'];
-                player.status = statuses[Math.floor(Math.random() * 3)];
-                localStorage.setItem('streamPlayers', JSON.stringify(players));
-                renderPlayers(document.getElementById('searchPlayer')?.value || '');
-                setTimeout(() => updatePlayerStatus(id), 30000);
-            } else if (player && player.expiresAt <= Date.now()) {
-                removePlayer(id);
-            }
-        }
-        
-        function addToHistory(msg) {
-            let history = JSON.parse(localStorage.getItem('actionHistory') || '[]');
-            history.unshift({ message: msg, type: 'info', timestamp: new Date().toLocaleString('ar-EG') });
-            if (history.length > 50) history.pop();
-            localStorage.setItem('actionHistory', JSON.stringify(history));
-        }
-        
-        // الأحداث
-        document.getElementById('addPlayerBtn').addEventListener('click', () => {
-            const id = document.getElementById('newPlayerId').value.trim();
+        document.getElementById('addBtn').addEventListener('click', () => {
+            const id = document.getElementById('playerId').value.trim();
             if (id) addPlayer(id);
-            document.getElementById('newPlayerId').value = '';
-        });
-        
-        document.getElementById('searchPlayer').addEventListener('input', (e) => {
-            renderPlayers(e.target.value);
-        });
-        
-        document.getElementById('newPlayerId').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') document.getElementById('addPlayerBtn').click();
+            document.getElementById('playerId').value = '';
         });
         
         // تنظيف اللاعبين المنتهية صلاحيتهم
         setInterval(() => {
             let changed = false;
-            players = players.filter(p => {
-                if (p.expiresAt <= Date.now()) { changed = true; return false; }
-                return true;
-            });
-            if (changed) {
-                localStorage.setItem('streamPlayers', JSON.stringify(players));
-                updateStats();
-                renderPlayers();
-            }
+            players = players.filter(p => { if (p.expiresAt <= Date.now()) { changed = true; return false; } return true; });
+            if (changed) { localStorage.setItem('streamPlayers', JSON.stringify(players)); renderPlayers(); }
         }, 60000);
         
-        // التهيئة
-        updateStats();
         renderPlayers();
-        
-        // بدء تحديث الحالات للاعبين الموجودين
-        players.forEach(p => {
-            if (p.expiresAt > Date.now()) updatePlayerStatus(p.id);
-        });
     </script>
 </body>
-  </html>
+</html>
