@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>IDLEB FF - السجل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(15,25,35,0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-back {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stats-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #a855f7;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+        }
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 40px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .history-list {
+            background: rgba(15,25,35,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            border-right: 3px solid transparent;
+        }
+        .history-item:hover {
+            background: rgba(255,255,255,0.07);
+            transform: translateX(-5px);
+        }
+        .history-item.success { border-right-color: #22c55e; }
+        .history-item.error { border-right-color: #ef4444; }
+        .history-item.info { border-right-color: #a855f7; }
+        .history-item.warning { border-right-color: #f59e0b; }
+        .history-content {
+            flex: 1;
+        }
+        .history-message {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .history-time {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+        .history-icon.success { background: rgba(34,197,94,0.2); color: #22c55e; }
+        .history-icon.error { background: rgba(239,68,68,0.2); color: #ef4444; }
+        .history-icon.info { background: rgba(168,85,247,0.2); color: #a855f7; }
+        .history-icon.warning { background: rgba(245,158,11,0.2); color: #f59e0b; }
+        .btn-clear {
+            width: 100%;
+            padding: 14px;
+            background: rgba(239,68,68,0.2);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 12px;
+            color: #ef4444;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .btn-clear:hover {
+            background: rgba(239,68,68,0.4);
+            transform: translateY(-2px);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        @media (max-width: 600px) {
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .history-icon {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="canvas-bg" id="bgCanvas"></canvas>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-crown"></i></div>
+                <h2>IDLEB FF</h2>
+            </div>
+            <button class="btn-back" onclick="window.location.href='/dashboard.html'">
+                <i class="fas fa-arrow-right"></i> الرجوع
+            </button>
+        </div>
+
+        <div class="stats-card">
+            <div class="stat-item">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">إجمالي العمليات</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="successCount">0</div>
+                <div class="stat-label">ناجحة</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="errorCount">0</div>
+                <div class="stat-label">فاشلة</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">الكل</button>
+            <button class="filter-btn" data-filter="success">ناجحة</button>
+            <button class="filter-btn" data-filter="error">فاشلة</button>
+            <button class="filter-btn" data-filter="info">معلومات</button>
+            <button class="filter-btn" data-filter="warning">تحذيرات</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchHistory" placeholder="بحث في السجل...">
+        </div>
+
+        <div class="history-list" id="historyList">
+            <div class="empty-state">
+                <i class="fas fa-history"></i>
+                <p>لا يوجد سجل حتى الآن</p>
+                <p style="font-size: 13px; margin-top: 10px;">قم بإرسال رقصات أو هجمات لملء السجل</p>
+            </div>
+        </div>
+
+        <button class="btn-clear" id="clearAllBtn">
+            <i class="fas fa-trash-alt"></i> مسح كل السجل
+        </button>
+    </div>
+
+    <script>
+        // 3D Background
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+        let particles = [];
+        for (let i = 0; i < 80; i++) {
+            particles.push({
+                x: Math.random(), y: Math.random(), z: Math.random(),
+                size: Math.random() * 3 + 1,
+                speedX: (Math.random() - 0.5) * 0.002,
+                speedY: (Math.random() - 0.5) * 0.002,
+                speedZ: (Math.random() - 0.5) * 0.003,
+                color: `hsl(${260 + Math.random() * 60}, 70%, 60%)`
+            });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, '#0f0c29'); grad.addColorStop(0.5, '#1a1a3e'); grad.addColorStop(1, '#24243e');
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) {
+                p.x += p.speedX; p.y += p.speedY; p.z += p.speedZ;
+                if (p.x > 1) p.x = 0; if (p.x < 0) p.x = 1;
+                if (p.y > 1) p.y = 0; if (p.y < 0) p.y = 1;
+                if (p.z > 1) p.z = 0; if (p.z < 0) p.z = 1;
+                const scale = 1 / (1 + p.z * 2);
+                const x = (p.x - 0.5) * canvas.width * scale + canvas.width / 2;
+                const y = (p.y - 0.5) * canvas.height * scale + canvas.height / 2;
+                const size = p.size * scale * 2;
+                ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color; ctx.shadowBlur = size * 3; ctx.shadowColor = p.color; ctx.fill();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // جلب السجل
+        let history = JSON.parse(localStorage.getItem('actionHistory') || '[]');
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        function updateStats() {
+            document.getElementById('totalCount').textContent = history.length;
+            document.getElementById('successCount').textContent = history.filter(h => h.type === 'success').length;
+            document.getElementById('errorCount').textContent = history.filter(h => h.type === 'error').length;
+        }
+
+        function getIconClass(type) {
+            switch(type) {
+                case 'success': return 'fa-check-circle';
+                case 'error': return 'fa-times-circle';
+                case 'warning': return 'fa-exclamation-triangle';
+                default: return 'fa-info-circle';
+            }
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            let filtered = history;
+            
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(h => h.type === currentFilter);
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(h => 
+                    h.message.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p>لا يوجد سجل</p>
+                        <p style="font-size: 13px; margin-top: 10px;">قم بإرسال رقصات أو هجمات لملء السجل</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filtered.map(item => `
+                <div class="history-item ${item.type}">
+                    <div class="history-icon ${item.type}">
+                        <i class="fas ${getIconClass(item.type)}"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-message">${item.message}</div>
+                        <div class="history-time">${item.timestamp}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearAllHistory() {
+            if (confirm('⚠️ هل أنت متأكد من مسح كل السجل؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                history = [];
+                localStorage.setItem('actionHistory', JSON.stringify(history));
+                updateStats();
+                renderHistory();
+                showNotification('تم مسح كل السجل بنجاح', 'success');
+            }
+        }
+
+        function showNotification(msg, type) {
+            // إشعار بسيط
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px;
+                background: ${type === 'success' ? '#22c55e' : '#ef4444'};
+                color: white; padding: 12px 20px; border-radius: 12px;
+                z-index: 1000; animation: fadeInOut 3s ease;
+                font-family: 'Cairo', sans-serif;
+            `;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // إضافة style للـ animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateX(100px); }
+                10% { opacity: 1; transform: translateX(0); }
+                90% { opacity: 1; transform: translateX(0); }
+                100% { opacity: 0; transform: translateX(100px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // الأحداث
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderHistory();
+            });
+        });
+
+        document.getElementById('searchHistory').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderHistory();
+        });
+
+        document.getElementById('clearAllBtn').addEventListener('click', clearAllHistory);
+
+        // التهيئة
+        updateStats();
+        renderHistory();
+    </script>
+</body>
+</html>
