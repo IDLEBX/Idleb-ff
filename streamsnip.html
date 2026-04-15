@@ -41,6 +41,20 @@
             color: white;
             cursor: pointer;
         }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+        }
+        .stat-card i { font-size: 28px; color: #a855f7; margin-bottom: 10px; }
+        .stat-value { font-size: 28px; font-weight: 800; }
         .add-player {
             background: rgba(255,255,255,0.05);
             border-radius: 16px;
@@ -57,6 +71,7 @@
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 12px;
             color: white;
+            font-family: 'Cairo', sans-serif;
         }
         .add-player button {
             padding: 14px 25px;
@@ -70,12 +85,16 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
         }
         .player-card {
             background: rgba(255,255,255,0.05);
             border-radius: 16px;
             padding: 15px;
+            transition: all 0.3s;
         }
+        .player-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); }
         .player-name { font-weight: 700; margin-bottom: 8px; }
         .player-status {
             padding: 4px 10px;
@@ -92,6 +111,7 @@
             padding: 8px;
             border-radius: 10px;
             cursor: pointer;
+            font-family: 'Cairo', sans-serif;
         }
         .btn-snipe { background: rgba(168,85,247,0.2); border: none; color: #a855f7; }
         .btn-remove { background: rgba(239,68,68,0.2); border: none; color: #ef4444; }
@@ -120,6 +140,12 @@
             <button class="btn-back" onclick="window.location.href='dashboard.html'"><i class="fas fa-arrow-right"></i> رجوع</button>
         </div>
 
+        <div class="stats-grid">
+            <div class="stat-card"><i class="fas fa-users"></i><div class="stat-value" id="totalPlayers">0</div><div class="stat-label">مجموع اللاعبين</div></div>
+            <div class="stat-card"><i class="fas fa-globe"></i><div class="stat-value" id="onlinePlayers">0</div><div class="stat-label">متصلين</div></div>
+            <div class="stat-card"><i class="fas fa-gamepad"></i><div class="stat-value" id="ingamePlayers">0</div><div class="stat-label">في اللعبة</div></div>
+        </div>
+
         <div class="add-player">
             <input type="text" id="playerId" placeholder="أدخل ID اللاعب (8-12 رقم)" maxlength="12">
             <button id="addBtn"><i class="fas fa-plus"></i> إضافة لاعب</button>
@@ -130,6 +156,7 @@
 
     <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
+    <script src="vignette.js"></script>
     <script>
         if (localStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'index.html';
         
@@ -140,6 +167,12 @@
             document.getElementById('toastMsg').textContent = msg;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        function updateStats() {
+            document.getElementById('totalPlayers').textContent = players.length;
+            document.getElementById('onlinePlayers').textContent = players.filter(p => p.status === 'online').length;
+            document.getElementById('ingamePlayers').textContent = players.filter(p => p.status === 'ingame').length;
         }
         
         function renderPlayers() {
@@ -159,6 +192,7 @@
                     </div>
                 </div>
             `).join('');
+            updateStats();
         }
         
         function addPlayer(id) {
@@ -204,7 +238,6 @@
             document.getElementById('playerId').value = '';
         });
         
-        // تنظيف اللاعبين المنتهية صلاحيتهم
         setInterval(() => {
             let changed = false;
             players = players.filter(p => { if (p.expiresAt <= Date.now()) { changed = true; return false; } return true; });
