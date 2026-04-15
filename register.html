@@ -2,59 +2,40 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDLEB FF - إنشاء حساب</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* نفس الـ CSS من index.html مع بعض التعديلات */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
         .container {
-            position: relative;
-            z-index: 10;
             width: 100%;
             max-width: 500px;
             padding: 20px;
         }
         .card {
-            background: rgba(15, 25, 35, 0.85);
+            background: rgba(15,25,35,0.85);
             backdrop-filter: blur(15px);
             border-radius: 32px;
             padding: 40px 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: floatIn 0.8s ease;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            animation: fadeIn 0.6s ease;
         }
-        @keyframes floatIn {
+        @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .logo {
-            text-align: center;
-            margin-bottom: 32px;
-        }
+        .logo { text-align: center; margin-bottom: 32px; }
         .logo-icon {
-            width: 70px;
-            height: 70px;
+            width: 70px; height: 70px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 20px;
             margin: 0 auto 16px;
@@ -70,22 +51,14 @@
             background-clip: text;
             color: transparent;
         }
-        .logo p {
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
         .form-group label {
             display: block;
             font-size: 13px;
             color: rgba(255,255,255,0.7);
             margin-bottom: 8px;
         }
-        .input-wrapper {
-            position: relative;
-        }
+        .input-wrapper { position: relative; }
         .input-wrapper input {
             width: 100%;
             height: 50px;
@@ -96,15 +69,10 @@
             color: white;
             font-size: 15px;
             font-family: 'Cairo', sans-serif;
-            transition: all 0.3s;
         }
         .input-wrapper input:focus {
-            border-color: #a855f7;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(168,85,247,0.2);
-        }
-        .input-wrapper input::placeholder {
-            color: rgba(255,255,255,0.4);
+            border-color: #a855f7;
         }
         .input-icon {
             position: absolute;
@@ -132,60 +100,32 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 16px;
-            transition: all 0.3s;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(102,126,234,0.5);
-        }
+        .btn-primary:hover { transform: translateY(-2px); }
         .login-link {
             text-align: center;
             margin-top: 24px;
             padding-top: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
-        .login-link a {
-            color: #a855f7;
-            text-decoration: none;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        .login-link p {
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
-        }
+        .login-link a { color: #a855f7; text-decoration: none; }
         .developer {
             text-align: center;
             margin-top: 24px;
             color: rgba(255,255,255,0.4);
             font-size: 12px;
         }
-        .developer a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-        }
+        .developer a { color: rgba(255,255,255,0.6); text-decoration: none; }
         .message {
             padding: 12px;
             border-radius: 12px;
             margin-bottom: 20px;
-            font-size: 14px;
             text-align: center;
             display: none;
         }
-        .message.show {
-            display: block;
-        }
-        .message.success {
-            background: rgba(34,197,94,0.15);
-            color: #22c55e;
-            border: 1px solid rgba(34,197,94,0.3);
-        }
-        .message.error {
-            background: rgba(239,68,68,0.15);
-            color: #ef4444;
-            border: 1px solid rgba(239,68,68,0.3);
-        }
+        .message.show { display: block; }
+        .message.error { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .message.success { background: rgba(34,197,94,0.15); color: #22c55e; }
         .loading .btn-primary {
             color: transparent;
             position: relative;
@@ -200,38 +140,27 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @media (max-width: 480px) {
-            .card { padding: 28px 20px; }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 480px) { .card { padding: 28px 20px; } }
     </style>
 </head>
 <body>
-    <canvas class="canvas-bg" id="bgCanvas"></canvas>
-    
     <div class="container">
         <div class="card">
             <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
+                <div class="logo-icon"><i class="fas fa-user-plus"></i></div>
                 <h1>IDLEB FF</h1>
                 <p>إنشاء حساب جديد</p>
             </div>
-            
             <div class="message" id="message"></div>
-            
             <form id="registerForm">
                 <div class="form-group">
                     <label>اسم المستخدم</label>
                     <div class="input-wrapper">
-                        <input type="text" id="username" placeholder="أدخل اسم المستخدم" autocomplete="off">
+                        <input type="text" id="username" placeholder="أدخل اسم المستخدم">
                         <i class="fas fa-user input-icon"></i>
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label>البريد الإلكتروني</label>
                     <div class="input-wrapper">
@@ -239,7 +168,6 @@
                         <i class="fas fa-envelope input-icon"></i>
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label>كلمة المرور</label>
                     <div class="input-wrapper">
@@ -248,7 +176,6 @@
                         <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label>تأكيد كلمة المرور</label>
                     <div class="input-wrapper">
@@ -256,82 +183,17 @@
                         <i class="fas fa-check-circle input-icon"></i>
                     </div>
                 </div>
-                
                 <button type="submit" class="btn-primary">إنشاء حساب</button>
             </form>
-            
             <div class="login-link">
-                <p>لديك حساب بالفعل؟ <a href="/index.html">تسجيل الدخول</a></p>
+                <p>لديك حساب بالفعل؟ <a href="index.html">تسجيل الدخول</a></p>
             </div>
-            
             <div class="developer">
                 <p>Developed by <a href="https://instagram.com/xlb_me" target="_blank">IDLEB X</a></p>
             </div>
         </div>
     </div>
-    
     <script>
-        // 3D Background
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        let particles = [];
-        for (let i = 0; i < 80; i++) {
-            particles.push({
-                x: Math.random(),
-                y: Math.random(),
-                z: Math.random(),
-                size: Math.random() * 3 + 1,
-                speedX: (Math.random() - 0.5) * 0.003,
-                speedY: (Math.random() - 0.5) * 0.003,
-                speedZ: (Math.random() - 0.5) * 0.005,
-                color: `hsl(${260 + Math.random() * 60}, 70%, 60%)`
-            });
-        }
-        
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            grad.addColorStop(0, '#0f0c29');
-            grad.addColorStop(0.5, '#302b63');
-            grad.addColorStop(1, '#24243e');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            for (let p of particles) {
-                p.x += p.speedX;
-                p.y += p.speedY;
-                p.z += p.speedZ;
-                if (p.x > 1) p.x = 0;
-                if (p.x < 0) p.x = 1;
-                if (p.y > 1) p.y = 0;
-                if (p.y < 0) p.y = 1;
-                if (p.z > 1) p.z = 0;
-                if (p.z < 0) p.z = 1;
-                
-                const scale = 1 / (1 + p.z * 2);
-                const x = (p.x - 0.5) * canvas.width * scale + canvas.width / 2;
-                const y = (p.y - 0.5) * canvas.height * scale + canvas.height / 2;
-                const size = p.size * scale * 2;
-                
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.shadowBlur = size * 3;
-                ctx.shadowColor = p.color;
-                ctx.fill();
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-        
         // Toggle Password
         const toggle = document.getElementById('togglePassword');
         const passInput = document.getElementById('password');
@@ -345,7 +207,6 @@
         // Register Form
         const form = document.getElementById('registerForm');
         const msgDiv = document.getElementById('message');
-        
         function showMsg(text, type) {
             msgDiv.textContent = text;
             msgDiv.className = `message ${type} show`;
@@ -354,7 +215,6 @@
         
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
@@ -364,22 +224,18 @@
                 showMsg('⚠️ الرجاء إدخال جميع البيانات', 'error');
                 return;
             }
-            
             if (username.length < 3) {
                 showMsg('❌ اسم المستخدم يجب أن يكون 3 أحرف على الأقل', 'error');
                 return;
             }
-            
             if (!email.includes('@') || !email.includes('.')) {
                 showMsg('❌ الرجاء إدخال بريد إلكتروني صحيح', 'error');
                 return;
             }
-            
             if (password.length < 6) {
                 showMsg('❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
                 return;
             }
-            
             if (password !== confirm) {
                 showMsg('❌ كلمة المرور وتأكيدها غير متطابقين', 'error');
                 return;
@@ -387,9 +243,7 @@
             
             form.classList.add('loading');
             
-            // محاكاة إنشاء حساب
             setTimeout(() => {
-                // تخزين بيانات المستخدم
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 const existing = users.find(u => u.username === username || u.email === email);
                 
@@ -404,21 +258,16 @@
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userId', username);
                 localStorage.setItem('userName', username);
+                localStorage.setItem('joinDate', new Date().toISOString());
                 
-                showMsg('✅ تم إنشاء الحساب بنجاح! جاري التحويل...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = '/dashboard.html';
-                }, 1500);
-                
-                form.classList.remove('loading');
+                showMsg('✅ تم إنشاء الحساب بنجاح!', 'success');
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
             }, 1000);
         });
         
-        // التحقق من الجلسة
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = '/dashboard.html';
+            window.location.href = 'dashboard.html';
         }
     </script>
 </body>
-  </html>
+</html>
