@@ -2,594 +2,239 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDLEB FF - تسجيل الدخول</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
-            position: relative;
         }
-
-        /* خلفية 3D متحركة */
-        .canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        /* حاوية الكارد */
         .container {
-            position: relative;
-            z-index: 10;
             width: 100%;
             max-width: 450px;
             padding: 20px;
         }
-
-        /* كارد تسجيل الدخول - تأثير 3D */
         .card {
-            background: rgba(15, 25, 35, 0.85);
+            background: rgba(15,25,35,0.85);
             backdrop-filter: blur(15px);
             border-radius: 32px;
             padding: 40px 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                        0 0 0 1px rgba(255, 255, 255, 0.1);
-            transform: translateZ(20px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            animation: fadeIn 0.6s ease;
         }
-
-        .card:hover {
-            transform: translateZ(30px) scale(1.02);
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes floatIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px) rotateX(-15deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) rotateX(0);
-            }
-        }
-
-        /* زر تبديل اللغة */
-        .lang-switch {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-        }
-
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-
-        /* الشعار */
-        .logo {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
+        .logo { text-align: center; margin-bottom: 32px; }
         .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 24px;
             margin: 0 auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 40px;
-            box-shadow: 0 10px 30px -5px rgba(102, 126, 234, 0.4);
-            animation: pulse 2s infinite;
         }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .logo h1 {
             font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #a855f7 100%);
+            background: linear-gradient(135deg, #fff, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.02em;
         }
-
-        .logo p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        /* الفورم */
-        .form-group {
-            margin-bottom: 24px;
-        }
-
+        .logo p { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 4px; }
+        .form-group { margin-bottom: 24px; }
         .form-group label {
             display: block;
             font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255,255,255,0.7);
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
         }
-
-        .input-wrapper {
-            position: relative;
-        }
-
+        .input-wrapper { position: relative; }
         .input-wrapper input {
             width: 100%;
             height: 52px;
             padding: 0 48px 0 16px;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 16px;
             color: white;
             font-size: 16px;
             font-family: 'Cairo', sans-serif;
-            transition: all 0.3s;
-            outline: none;
         }
-
         .input-wrapper input:focus {
+            outline: none;
             border-color: #a855f7;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
         }
-
-        .input-wrapper input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
         .input-icon {
             position: absolute;
             right: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 18px;
-            pointer-events: none;
+            color: rgba(255,255,255,0.5);
         }
-
-        /* زر الدخول */
-        .btn-primary {
-            width: 100%;
-            height: 52px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 16px;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            font-family: 'Cairo', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-primary:active {
-            transform: translateY(1px);
-        }
-
-        /* رابط إنشاء حساب */
-        .register-link {
-            text-align: center;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .register-link a {
-            color: #a855f7;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .register-link a:hover {
-            color: #c084fc;
-            text-decoration: underline;
-        }
-
-        .register-link p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-        }
-
-        /* رسائل */
-        .message {
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            display: none;
-        }
-
-        .message.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.success {
-            background: rgba(34, 197, 94, 0.15);
-            color: #22c55e;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .message.error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .message.info {
-            background: rgba(168, 85, 247, 0.15);
-            color: #a855f7;
-            border: 1px solid rgba(168, 85, 247, 0.3);
-        }
-
-        /* فوتر المطور */
-        .developer {
-            text-align: center;
-            margin-top: 24px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-        }
-
-        .developer a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .developer a:hover {
-            color: #a855f7;
-        }
-
-        /* حالة التحميل */
-        .loading .btn-primary {
-            color: transparent;
-            pointer-events: none;
-        }
-
-        .loading .btn-primary::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* زر إظهار/إخفاء كلمة المرور */
         .toggle-password {
             position: absolute;
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255,255,255,0.5);
             cursor: pointer;
-            font-size: 18px;
         }
-
-        @media (max-width: 480px) {
-            .card {
-                padding: 32px 24px;
-            }
-            .logo-icon {
-                width: 65px;
-                height: 65px;
-                font-size: 32px;
-            }
-            .logo h1 {
-                font-size: 26px;
-            }
+        .btn-primary {
+            width: 100%;
+            height: 52px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
         }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .register-link {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .register-link a { color: #a855f7; text-decoration: none; }
+        .register-link p { color: rgba(255,255,255,0.5); font-size: 14px; }
+        .developer {
+            text-align: center;
+            margin-top: 24px;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+        }
+        .developer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+        .message {
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        .message.show { display: block; }
+        .message.error { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .message.success { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .loading .btn-primary {
+            color: transparent;
+            position: relative;
+        }
+        .loading .btn-primary::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 480px) { .card { padding: 32px 24px; } }
     </style>
 </head>
 <body>
-
-    <!-- Canvas 3D Background -->
-    <canvas class="canvas-bg" id="bgCanvas"></canvas>
-
     <div class="container">
         <div class="card">
-            <div class="lang-switch">
-                <button class="lang-btn" id="langToggle">
-                    <i class="fas fa-globe"></i>
-                    <span id="langToggleText">English</span>
-                </button>
-            </div>
-
             <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
+                <div class="logo-icon"><i class="fas fa-crown"></i></div>
                 <h1>IDLEB FF</h1>
-                <p data-i18n="enter_details">أدخل بياناتك للمتابعة</p>
+                <p>أدخل بياناتك للمتابعة</p>
             </div>
-
             <div class="message" id="message"></div>
-
             <form id="loginForm">
                 <div class="form-group">
-                    <label data-i18n="username_label">اسم المستخدم أو البريد الإلكتروني</label>
+                    <label>اسم المستخدم أو البريد الإلكتروني</label>
                     <div class="input-wrapper">
-                        <input type="text" id="username" placeholder="أدخل اسم المستخدم أو البريد" autocomplete="off">
+                        <input type="text" id="username" placeholder="أدخل اسم المستخدم" autocomplete="off">
                         <i class="fas fa-user input-icon"></i>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label data-i18n="password_label">كلمة المرور</label>
+                    <label>كلمة المرور</label>
                     <div class="input-wrapper">
-                        <input type="password" id="password" placeholder="أدخل كلمة المرور">
+                        <input type="password" id="password" placeholder="••••••••">
                         <i class="fas fa-lock input-icon"></i>
                         <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                     </div>
                 </div>
-
-                <button type="submit" class="btn-primary">
-                    <span data-i18n="login_btn">دخول</span>
-                </button>
+                <button type="submit" class="btn-primary">دخول</button>
             </form>
-
             <div class="register-link">
-                <p>ليس لديك حساب؟ <a href="/register.html" data-i18n="create_account">إنشاء حساب جديد</a></p>
+                <p>ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
             </div>
-
             <div class="developer">
                 <p>Developed by <a href="https://instagram.com/xlb_me" target="_blank">IDLEB X</a></p>
             </div>
         </div>
     </div>
-
     <script>
-        // ========== 3D Background Effect ==========
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        // جزيئات 3D متحركة
-        let particles = [];
-        const PARTICLE_COUNT = 100;
-
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-                x: Math.random(),
-                y: Math.random(),
-                z: Math.random(),
-                size: Math.random() * 3 + 1,
-                speedX: (Math.random() - 0.5) * 0.003,
-                speedY: (Math.random() - 0.5) * 0.003,
-                speedZ: (Math.random() - 0.5) * 0.005,
-                color: `hsl(${260 + Math.random() * 60}, 70%, 60%)`
-            });
-        }
-
-        function animate3D() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // خلفية متدرجة
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#0f0c29');
-            gradient.addColorStop(0.5, '#302b63');
-            gradient.addColorStop(1, '#24243e');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // رسم الجزيئات
-            for (let p of particles) {
-                p.x += p.speedX;
-                p.y += p.speedY;
-                p.z += p.speedZ;
-                
-                if (p.x > 1) p.x = 0;
-                if (p.x < 0) p.x = 1;
-                if (p.y > 1) p.y = 0;
-                if (p.y < 0) p.y = 1;
-                if (p.z > 1) p.z = 0;
-                if (p.z < 0) p.z = 1;
-                
-                // تحويل 3D إلى 2D
-                const scale = 1 / (1 + p.z * 2);
-                const x = (p.x - 0.5) * canvas.width * scale + canvas.width / 2;
-                const y = (p.y - 0.5) * canvas.height * scale + canvas.height / 2;
-                const size = p.size * scale * 2;
-                
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.shadowBlur = size * 3;
-                ctx.shadowColor = p.color;
-                ctx.fill();
-            }
-            
-            requestAnimationFrame(animate3D);
-        }
-        
-        animate3D();
-
-        // ========== إظهار/إخفاء كلمة المرور ==========
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
+        // Toggle Password
+        const toggle = document.getElementById('togglePassword');
+        const passInput = document.getElementById('password');
+        toggle.addEventListener('click', () => {
+            const type = passInput.type === 'password' ? 'text' : 'password';
+            passInput.type = type;
+            toggle.classList.toggle('fa-eye');
+            toggle.classList.toggle('fa-eye-slash');
         });
-
-        // ========== نظام تسجيل الدخول ==========
-        const form = document.getElementById('loginForm');
-        const messageDiv = document.getElementById('message');
         
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type} show`;
-            setTimeout(() => {
-                messageDiv.classList.remove('show');
-            }, 4000);
+        // Login Form
+        const form = document.getElementById('loginForm');
+        const msgDiv = document.getElementById('message');
+        function showMsg(text, type) {
+            msgDiv.textContent = text;
+            msgDiv.className = `message ${type} show`;
+            setTimeout(() => msgDiv.classList.remove('show'), 4000);
         }
-
-        form.addEventListener('submit', async (e) => {
+        
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const password = document.getElementById('password').value;
             
             if (!username || !password) {
-                showMessage('⚠️ الرجاء إدخال جميع البيانات', 'error');
+                showMsg('⚠️ الرجاء إدخال جميع البيانات', 'error');
                 return;
             }
             
             form.classList.add('loading');
             
-            // محاكاة تسجيل الدخول (للتطوير - استبدلها بـ API حقيقي)
+            // محاكاة تسجيل الدخول
             setTimeout(() => {
-                // تخزين بيانات المستخدم
-                localStorage.setItem('userId', username);
-                localStorage.setItem('userName', username.split('@')[0]);
-                localStorage.setItem('isLoggedIn', 'true');
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => (u.username === username || u.email === username) && u.password === password);
                 
-                showMessage('✅ تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = '/dashboard.html';
-                }, 1500);
-                
-                form.classList.remove('loading');
+                if (user) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userId', user.username);
+                    localStorage.setItem('userName', user.username);
+                    showMsg('✅ تم تسجيل الدخول بنجاح!', 'success');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                } else {
+                    showMsg('❌ اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
+                    form.classList.remove('loading');
+                }
             }, 1000);
         });
-
-        // ========== الترجمة ==========
-        const translations = {
-            ar: {
-                enter_details: "أدخل بياناتك للمتابعة",
-                username_label: "اسم المستخدم أو البريد الإلكتروني",
-                password_label: "كلمة المرور",
-                login_btn: "دخول",
-                create_account: "إنشاء حساب جديد"
-            },
-            en: {
-                enter_details: "Enter your details to continue",
-                username_label: "Username or Email",
-                password_label: "Password",
-                login_btn: "Login",
-                create_account: "Create new account"
-            }
-        };
         
-        let currentLang = localStorage.getItem('appLang') || 'ar';
-        
-        function applyLanguage(lang) {
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    if (el.hasAttribute('placeholder')) {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
-            });
-        }
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            localStorage.setItem('appLang', currentLang);
-            applyLanguage(currentLang);
-            const toggleText = document.getElementById('langToggleText');
-            if (toggleText) {
-                toggleText.textContent = currentLang === 'ar' ? 'English' : 'العربية';
-            }
-        }
-        
-        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
-        applyLanguage(currentLang);
-        
-        // التحقق من وجود جلسة نشطة
+        // Check existing session
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = '/dashboard.html';
+            window.location.href = 'dashboard.html';
         }
     </script>
 </body>
-                  </html>
+</html>
