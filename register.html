@@ -16,11 +16,7 @@
             align-items: center;
             justify-content: center;
         }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-        }
+        .container { width: 100%; max-width: 500px; padding: 20px; }
         .card {
             background: rgba(15,25,35,0.85);
             backdrop-filter: blur(15px);
@@ -194,7 +190,6 @@
         </div>
     </div>
     <script>
-        // Toggle Password
         const toggle = document.getElementById('togglePassword');
         const passInput = document.getElementById('password');
         toggle.addEventListener('click', () => {
@@ -203,8 +198,6 @@
             toggle.classList.toggle('fa-eye');
             toggle.classList.toggle('fa-eye-slash');
         });
-        
-        // Register Form
         const form = document.getElementById('registerForm');
         const msgDiv = document.getElementById('message');
         function showMsg(text, type) {
@@ -212,14 +205,12 @@
             msgDiv.className = `message ${type} show`;
             setTimeout(() => msgDiv.classList.remove('show'), 4000);
         }
-        
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const confirm = document.getElementById('confirmPassword').value;
-            
             if (!username || !email || !password || !confirm) {
                 showMsg('⚠️ الرجاء إدخال جميع البيانات', 'error');
                 return;
@@ -240,31 +231,25 @@
                 showMsg('❌ كلمة المرور وتأكيدها غير متطابقين', 'error');
                 return;
             }
-            
             form.classList.add('loading');
-            
             setTimeout(() => {
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 const existing = users.find(u => u.username === username || u.email === email);
-                
                 if (existing) {
                     showMsg('❌ اسم المستخدم أو البريد الإلكتروني موجود مسبقاً', 'error');
                     form.classList.remove('loading');
                     return;
                 }
-                
                 users.push({ username, email, password, createdAt: new Date().toISOString() });
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userId', username);
                 localStorage.setItem('userName', username);
                 localStorage.setItem('joinDate', new Date().toISOString());
-                
                 showMsg('✅ تم إنشاء الحساب بنجاح!', 'success');
                 setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
             }, 1000);
         });
-        
         if (localStorage.getItem('isLoggedIn') === 'true') {
             window.location.href = 'dashboard.html';
         }
